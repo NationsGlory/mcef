@@ -1,17 +1,16 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "http://maven.nationsglory.fr/releases/" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-NGWascar-rev3'
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.12.2-1.20"
+version = "1.6.4-1.20"
 group = "net.montoyo.mcef"
 archivesBaseName = "mcef"
 def enableSigning = false
@@ -22,29 +21,21 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
-    runDir = "run"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171003"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    version = "1.6.4-9.11.1.964"
+     
 }
 
 //MCEF: update Let's Encrypt root certificate before building
-task importLetsEncryptCertificate {
+/*task importLetsEncryptCertificate {
     def target = new File(sourceSets.main.resources.srcDirs.first(), "assets/mcef/r3.crt")
     if(target.exists())
         target.delete()
 
     new URL("https://montoyo.net/ShareX/root.crt").withInputStream { i -> target.withOutputStream { it << i }}
     println "updated let's encrypt root certificate"
-}
+}*/
 
-processResources.dependsOn importLetsEncryptCertificate
+//processResources.dependsOn importLetsEncryptCertificate
 
 //MCEF: Generate unobfuscated JAR that can be added to the 'libs' folder
 task apiJar(type: Jar) {
@@ -118,10 +109,6 @@ task coremodJar(type: Jar) {
     }
 }
 
-reobf {
-    coremodJar { mappingType = 'SEARGE' }
-}
-
 jar {
     exclude 'net/montoyo/mcef/coremod/**'
 
@@ -138,9 +125,7 @@ jar {
     manifest {
         attributes 'ContainedDeps': coremodJar.archivePath.name
         attributes 'Main-Class': 'net.montoyo.mcef.setup.SetupUI'
-    }
-
-    dependsOn reobfCoremodJar
+    } 
 }
 
 artifacts {
